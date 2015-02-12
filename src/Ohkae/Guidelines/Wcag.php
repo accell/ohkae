@@ -4,7 +4,7 @@ namespace Ohkae\Guidelines;
 
 class Wcag extends OhkaeReport implements OhkaeGuidelineInterface
 {
-    public $defined_tests = [
+    public static $defined_tests = [
         'imgHasAlt',
         'tableHasHeader',
         'tableHeaderHasScope',
@@ -12,20 +12,13 @@ class Wcag extends OhkaeReport implements OhkaeGuidelineInterface
         'textHasContrast'
     ];
 
-    public function getVerbage()
-    {
+    // public function getVerbage()
+    // {
 
-    }
+    // }
 
-    public function iterateTests()
-    {
-        foreach ($defined_tests as $test) {
-            $test_result = OhkaeTests::$test.'()';
-        }
-    }
-
-    public function addReport()
-    {
+    // public function addReport()
+    // {
         
-    }
+    // }
 }
