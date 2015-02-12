@@ -1,0 +1,16 @@
+{
+    "name": "accell/ohkae",
+    "description": "An accessibility validater for HTML",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eric Colon",
+            "email": "me@ericcolon.com"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {},
+    "require-dev": {
+        "symfony/var-dumper": "3.0.*@dev"
+    }
+}
