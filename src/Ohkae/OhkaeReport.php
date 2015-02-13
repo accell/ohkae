@@ -9,6 +9,6 @@ class OhkaeReport
 
     public function __construct()
     {
-        
+
     }
 }

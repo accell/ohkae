@@ -2,7 +2,7 @@
 
 namespace Ohkae\Guidelines;
 
-class Wcag
+class Section508
 {
     public static $defined_tests = [
         'imgHasAlt',
