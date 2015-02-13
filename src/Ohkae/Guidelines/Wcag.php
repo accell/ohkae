@@ -2,7 +2,7 @@
 
 namespace Ohkae\Guidelines;
 
-class Wcag extends OhkaeReport implements OhkaeGuidelineInterface
+class Wcag
 {
     public static $defined_tests = [
         'imgHasAlt',
@@ -11,14 +11,4 @@ class Wcag extends OhkaeReport implements OhkaeGuidelineInterface
         'contentHasHeadings',
         'textHasContrast'
     ];
-
-    // public function getVerbage()
-    // {
-
-    // }
-
-    // public function addReport()
-    // {
-        
-    // }
 }

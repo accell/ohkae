@@ -4,12 +4,13 @@ namespace Ohkae;
 
 class Ohkae
 {
-    const OHKAE_ERROR = 1,
-          OHKAE_SUGGESTION = 2;
+    const OHKAE_ERROR      = 'Error',
+          OHKAE_SUGGESTION = 'Suggestion';
 
     public $dom,
            $html,
-           $theReport,
+           $report,
+           $tests,
            $guideline;
 
     /**
@@ -26,21 +27,96 @@ class Ohkae
         $this->dom->loadHtml('<?xml encoding="utf-8" ?>'. $this->html);
     }
 
+    public function addReportItem($element, $priority, $test)
+    {
+        if (is_object($element) and method_exists($element, 'getLineNo')) {
+            $lineNo = $element->getLineNo();
+        }
+
+        $testItem = [
+            'title' => $test,
+            'description' => '$verbage',
+            'prority' => $priority,
+            'html' => $element ? htmlspecialchars($this->getHtml($element)) : '',
+        ];
+
+        switch ($priority) {
+            case 'Error':
+                $this->report['errors'][] = $testItem;
+                break;
+            case 'Suggestion':
+                $this->report['suggestions'][] = $testItem;
+                break;
+        }
+
+        dump($this->report);
+    }
+
+    public function buildReport()
+    {
+
+    }
+
+    public function getHtml($element)
+    {
+        $temp_dom = new \DOMDocument();
+
+        try {
+            $problem_html = $temp_dom->createElement(utf8_encode($element->tagName));
+        } catch (Exception $e) {
+
+        }
+
+        foreach ($element->attributes as $attribute) {
+            $problem_html->setAttribute($attribute->name, $attribute->value);
+        }
+
+        $problem_html->nodeValue = htmlentities($element->nodeValue);
+
+        $temp_dom->appendChild($problem_html);
+
+        $problem_html = $temp_dom->saveHTML();
+
+        return $problem_html;
+    }
+
     /**
      * [beginReport description]
      * @return [type]
      */
-    public function getReport()
+    public function runReport()
     {
-        $this->report = OhkaeReport::getTests();
+        $this->getTests();
+    }
+
+    public function getTests()
+    {
+        switch ($this->guideline) {
+            case 'wcag':
+                $this->tests = Guidelines\Wcag::$defined_tests;
+                break;
+        }
+
+        $this->runTests();
     }
 
     /**
      * [parse description]
      * @return [type]
      */
-    public function parse()
+    public function parseResults()
     {
-        return json_encode($the_report);
+        die(dump($this->report));
+    }
+
+    public function runTests()
+    {
+        if ($this->dom) {
+            $testIterator = new OhKaeTests($this->html, $this->guideline);
+
+            foreach ($this->tests as $test) {
+                $testIterator->$test($this->dom, $test);
+            }
+        }
     }
 }

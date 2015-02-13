@@ -7,4 +7,4 @@ use Ohkae\Ohkae;
 $html = file_get_contents('test.html');
 
 $dong = new Ohkae($html, 'wcag');
-$dong->getReport();
+$dong->runReport();
