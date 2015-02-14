@@ -9,6 +9,7 @@ class Wcag
         'tableHasHeader',
         'tableHeaderHasScope',
         'contentHasHeadings',
-        'textHasContrast'
+        'textHasContrast',
+        'obsoleteElement',
     ];
 }

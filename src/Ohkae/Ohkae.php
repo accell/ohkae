@@ -2,6 +2,9 @@
 
 namespace Ohkae;
 
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\CssSelector\CssSelector;
+
 class Ohkae
 {
     const OHKAE_ERROR      = 'Error',
@@ -15,41 +18,51 @@ class Ohkae
 
     /**
      * The class constructor
-     * @param string $html      - The HTML retrieved from a file
-     * @param string $guideline - The guideline standard to be followed
+     * @param string $html        - The HTML retrieved from a file
+     * @param string $guideline   - The guideline standard to be followed
+     * @param array $ignoredTests - Any tests to be ignored
      */
     public function __construct($html, $guideline)
     {
-        $this->dom       = new \DOMDocument();
+        // $this->dom       = new \DOMDocument();
+        $this->dom       = new Crawler($html);
         $this->html      = $html;
         $this->guideline = $guideline;
-
-        $this->dom->loadHtml('<?xml encoding="utf-8" ?>'. $this->html);
     }
 
+    /**
+     * Adds an item to the report list when a test fails
+     * @param object $element  - The problem element
+     * @param string $priority - The priority of the problem
+     * @param string $test     - The name of the test that failed
+     */
     public function addReportItem($element, $priority, $test)
     {
-        if (is_object($element) and method_exists($element, 'getLineNo')) {
-            $lineNo = $element->getLineNo();
-        }
-
         $testItem = [
-            'title' => $test,
+            'title'       => $test,
             'description' => '$verbage',
-            'prority' => $priority,
-            'html' => $element ? htmlspecialchars($this->getHtml($element)) : '',
+            'prority'     => $priority,
         ];
 
+        // Sometimes we don't need to pass in an element
+        if (is_object($element)) {
+            $testItem['lineNo'] = $element->getNode(0)->getLineNo();
+        }
+
+        if (!$testItem['html'] = $element->html()) {
+            $testItem['html'] = $element->getNode(0)->ownerDocument->saveHTML($element->getNode(0));
+        }
+
+        die(dump($testItem));
+
         switch ($priority) {
-            case 'Error':
+            case self::OHKAE_ERROR:
                 $this->report['errors'][] = $testItem;
                 break;
-            case 'Suggestion':
+            case self::OHKAE_SUGGESTION:
                 $this->report['suggestions'][] = $testItem;
                 break;
         }
-
-        dump($this->report);
     }
 
     public function buildReport()

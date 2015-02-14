@@ -10,7 +10,9 @@
     ],
     "minimum-stability": "alpha",
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.5.9",
+        "symfony/dom-crawler": "3.0.*@dev",
+        "symfony/css-selector": "3.0.*@dev"
     },
     "require-dev": {
         "symfony/var-dumper": "3.0.*@dev"
