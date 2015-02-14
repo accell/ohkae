@@ -1,0 +1,30 @@
+{
+    "contentHasHeadings": {
+        "title": "Content should use headings for structure",
+        "desc": "No heading elements were found in this document"
+    },
+    "imgHasAlt": {
+        "title": "Images need alternative text",
+        "desc": "Alternative text should be provided for images"
+    },
+    "imgAltTooLong": {
+        "title": "Images alternative text is too long",
+        "desc": "Alternative text for images should be less than 100 characters"
+    },
+    "obsoleteElement": {
+        "title": "This element is obsolete:",
+        "desc": "This element is no longer valid HTML and should be removed"
+    },
+    "tableHasHeader": {
+        "title": "Tables need headers",
+        "desc": "Tables should have headers"
+    },
+    "tableHeaderHasScope": {
+        "title": "Tables headers need scope",
+        "desc": "Table headers should have a proper scope defined"
+    },
+    "textHasContrast": {
+        "title": "Text needs appropriate contrast",
+        "desc": "Text should have appropriate contrast with its background"
+    }
+}

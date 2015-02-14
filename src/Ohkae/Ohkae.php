@@ -7,14 +7,14 @@ use Symfony\Component\CssSelector\CssSelector;
 
 class Ohkae
 {
-    const OHKAE_ERROR      = 'Error',
-          OHKAE_SUGGESTION = 'Suggestion';
+    const OHKAE_ERROR      = 'error',
+          OHKAE_SUGGESTION = 'suggestion';
 
-    public $dom,
-           $html,
-           $report,
-           $tests,
-           $guideline;
+    public static $dom,
+                  $report,
+                  $tests,
+                  $guideline,
+                  $verbage;
 
     /**
      * The class constructor
@@ -24,73 +24,9 @@ class Ohkae
      */
     public function __construct($html, $guideline)
     {
-        // $this->dom       = new \DOMDocument();
-        $this->dom       = new Crawler($html);
-        $this->html      = $html;
-        $this->guideline = $guideline;
-    }
-
-    /**
-     * Adds an item to the report list when a test fails
-     * @param object $element  - The problem element
-     * @param string $priority - The priority of the problem
-     * @param string $test     - The name of the test that failed
-     */
-    public function addReportItem($element, $priority, $test)
-    {
-        $testItem = [
-            'title'       => $test,
-            'description' => '$verbage',
-            'prority'     => $priority,
-        ];
-
-        // Sometimes we don't need to pass in an element
-        if (is_object($element)) {
-            $testItem['lineNo'] = $element->getNode(0)->getLineNo();
-        }
-
-        if (!$testItem['html'] = $element->html()) {
-            $testItem['html'] = $element->getNode(0)->ownerDocument->saveHTML($element->getNode(0));
-        }
-
-        die(dump($testItem));
-
-        switch ($priority) {
-            case self::OHKAE_ERROR:
-                $this->report['errors'][] = $testItem;
-                break;
-            case self::OHKAE_SUGGESTION:
-                $this->report['suggestions'][] = $testItem;
-                break;
-        }
-    }
-
-    public function buildReport()
-    {
-
-    }
-
-    public function getHtml($element)
-    {
-        $temp_dom = new \DOMDocument();
-
-        try {
-            $problem_html = $temp_dom->createElement(utf8_encode($element->tagName));
-        } catch (Exception $e) {
-
-        }
-
-        foreach ($element->attributes as $attribute) {
-            $problem_html->setAttribute($attribute->name, $attribute->value);
-        }
-
-        $problem_html->nodeValue = htmlentities($element->nodeValue);
-
-        $temp_dom->appendChild($problem_html);
-
-        $problem_html = $temp_dom->saveHTML();
-
-        return $problem_html;
+        self::$dom       = new Crawler($html);
+        self::$guideline = $guideline;
+        self::$verbage   = json_decode(utf8_encode(file_get_contents(__DIR__ . '/verbage.json')));
     }
 
     /**
@@ -99,37 +35,60 @@ class Ohkae
      */
     public function runReport()
     {
-        $this->getTests();
-    }
-
-    public function getTests()
-    {
-        switch ($this->guideline) {
+        switch (self::$guideline) {
             case 'wcag':
-                $this->tests = Guidelines\Wcag::$defined_tests;
+                self::$tests = Guidelines\Wcag::$definedTests;
+                break;
+            case 'section508':
+                self::$tests = Guidelines\Section508::$definedTests;
                 break;
         }
 
-        $this->runTests();
+        if (self::$dom) {
+            foreach (self::$tests as $test) {
+                OhKaeTests::$test($test);
+            }
+        }
+
+        return self::$report;
     }
 
     /**
-     * [parse description]
-     * @return [type]
+     * Adds an item to the report list when a test fails
+     * @param object $element  - The problem element
+     * @param string $priority - The priority of the problem
+     * @param string $test     - The name of the test that failed
      */
-    public function parseResults()
+    protected static function addReportItem($element, $priority, $test)
     {
-        die(dump($this->report));
-    }
+        $testItem = [
+            'name'        => $test,
+            'title'       => self::$verbage->$test->title,
+            'description' => self::$verbage->$test->desc,
+            'prority'     => $priority,
+        ];
 
-    public function runTests()
-    {
-        if ($this->dom) {
-            $testIterator = new OhKaeTests($this->html, $this->guideline);
+        // Sometimes we don't need to pass in an element
+        if (is_object($element)) {
+            $testItem['lineNo'] = $element->getNode(0)->getLineNo();
+        }
 
-            foreach ($this->tests as $test) {
-                $testIterator->$test($this->dom, $test);
-            }
+        if (isset($element)) {
+            $testItem['html'] = $element->getNode(0)->ownerDocument->saveHTML($element->getNode(0));
+        }
+
+        // Special case for the obsolete element test
+        if ($test == 'obsoleteElement') {
+            $testItem['title'] .= ' '.$element->nodeName();
+        }
+
+        switch ($priority) {
+            case self::OHKAE_ERROR:
+                self::$report[self::OHKAE_ERROR][] = $testItem;
+                break;
+            case self::OHKAE_SUGGESTION:
+                self::$report[self::OHKAE_SUGGESTION][] = $testItem;
+                break;
         }
     }
 }

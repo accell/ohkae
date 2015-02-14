@@ -4,12 +4,13 @@ namespace Ohkae\Guidelines;
 
 class Wcag
 {
-    public static $defined_tests = [
+    public static $definedTests = [
+        'contentHasHeadings',
         'imgHasAlt',
+        'imgAltTooLong',
+        'obsoleteElement',
         'tableHasHeader',
         'tableHeaderHasScope',
-        'contentHasHeadings',
         'textHasContrast',
-        'obsoleteElement',
     ];
 }

@@ -4,11 +4,13 @@ namespace Ohkae\Guidelines;
 
 class Section508
 {
-    public static $defined_tests = [
+    public static $definedTests = [
+        'contentHasHeadings',
         'imgHasAlt',
+        'imgAltTooLong',
+        'obsoleteElement',
         'tableHasHeader',
         'tableHeaderHasScope',
-        'contentHasHeadings',
-        'textHasContrast'
+        'textHasContrast',
     ];
 }

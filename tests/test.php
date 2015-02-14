@@ -6,5 +6,7 @@ use Ohkae\Ohkae;
 
 $html = file_get_contents('test.html');
 
-$dong = new Ohkae($html, 'wcag');
-$dong->runReport();
+$ohkae = new Ohkae($html, 'wcag');
+$report = $ohkae->runReport();
+
+die(dump($report));

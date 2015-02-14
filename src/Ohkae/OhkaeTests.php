@@ -8,110 +8,69 @@ use Symfony\Component\CssSelector\CssSelector;
 class OhkaeTests extends Ohkae
 {
     /**
-     * Images need alternative text
-     * @param  object $dom  - The DOMCrawler object being scanned
-     * @param  string $test - The name of this test
+     * Content should be marked with headings for structure/outlining purposes
+     * @param string $test - The name of this test
      */
-    public function imgHasAlt($dom, $test)
+    public static function contentHasHeadings($test)
     {
-        $priority = self::OHKAE_ERROR;
+        $priority   = parent::OHKAE_SUGGESTION;
+        $noHeadings = true;
 
-        $dom->filter('img')->each(function ($node, $i) use ($priority, $test) {
-            if (!$node->attr('alt') || $node->attr('alt') == '' || $node->attr('alt') == ' ') {
-                $this->addReportItem($node, $priority, $test);
+        parent::$dom->filter('body')->children()->each(function ($node, $i) use ($priority, $test, $noHeadings) {
+            if ($node->nodeName() == 'h1'
+                || $node->nodeName() == 'h2'
+                || $node->nodeName() == 'h3'
+                || $node->nodeName() == 'h4'
+                || $node->nodeName() == 'h5'
+                || $node->nodeName() == 'h6') {
+                $noHeadings = false;
             }
         });
 
-        die();
-    }
-
-    /**
-     * Tables need headings (<th> tags)
-     * @param  object $dom  - The DOMCrawler object being scanned
-     * @param  string $test - The name of this test
-     */
-    public function tableHasHeader($dom, $test)
-    {
-        $priority = self::OHKAE_ERROR;
-
-        foreach ($dom->getElementsByTagName('table') as $table) {
-            foreach ($table->childNodes as $child) {
-                if($child->nodeName == 'tr') {
-                    foreach($child->childNodes as $td) {
-                        if($td->nodeName !== 'th') {
-                            $this->addReportItem($table, $priority, $test);
-
-                            break 2;
-                        } else {
-                            return;
-                        }
-                    }
-                }
-            }
+        if ($noHeadings) {
+            parent::addReportItem(null, $priority, $test);
         }
     }
 
     /**
-     * Table headers (<th>) need to have a scope
-     * @param  object $dom  - The DOMCrawler object being scanned
-     * @param  string $test - The name of this test
+     * Images need alternative text
+     * @param string $test - The name of this test
      */
-    public function tableHeaderHasScope($dom, $test)
+    public static function imgHasAlt($test)
     {
-        $priority = self::OHKAE_ERROR;
+        $priority = parent::OHKAE_ERROR;
 
-        foreach ($dom->getElementsByTagName('table') as $table) {
-            foreach ($table->childNodes as $child) {
-                if($child->nodeName == 'tr') {
-                    foreach($child->childNodes as $th) {
-                        if($th->nodeName == 'th') {
-                            if (!$th->hasAttribute('scope')) {
-                                $this->addReportItem($th, $priority, $test);
-
-                                break 2;
-                            }
-                        }
-                    }
-                }
+        parent::$dom->filter('img')->each(function ($node, $i) use ($priority, $test) {
+            if (!$node->attr('alt') || $node->attr('alt') == '' || $node->attr('alt') == ' ') {
+                parent::addReportItem($node, $priority, $test);
             }
-        }
-
-        return;
+        });
     }
 
     /**
-     * Content should be marked with headings for structure/outlining purposes
-     * @param  object $dom  - The DOMCrawler object being scanned
-     * @param  string $test - The name of this test
+     * Image alt text should be less than 100 characters
+     * @param string $test - The name of this test
      */
-    public function contentHasHeadings($dom, $test)
+    public static function imgAltTooLong($test)
     {
-        $priority = self::OHKAE_SUGGESTION;
+        $priority = parent::OHKAE_ERROR;
 
-        foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $child) {
-            if ($child->nodeName == 'h1'
-                || $child->nodeName == 'h2'
-                || $child->nodeName == 'h3'
-                || $child->nodeName == 'h4'
-                || $child->nodeName == 'h5'
-                || $child->nodeName == 'h6') {
-                return;
+        parent::$dom->filter('img')->each(function ($node, $i) use ($priority, $test) {
+            if (strlen($node->attr('alt')) > 100) {
+                parent::addReportItem($node, $priority, $test);
             }
-        }
-
-        $this->addReportItem(null, $priority, $test);
+        });
     }
 
     /**
      * Don't use these obsolete HTML elements
-     * @param  object $dom  - The DOMCrawler object being scanned
-     * @param  string $test - The name of this test
+     * @param string $test - The name of this test
      */
-    public function obsoleteElement($dom, $test)
+    public static function obsoleteElement($test)
     {
-        $priority = self::OHKAE_ERROR;
+        $priority = parent::OHKAE_ERROR;
 
-        $obsoleteElements = [
+        $obsolete = [
             'acronym',
             'applet',
             'basefont',
@@ -131,22 +90,57 @@ class OhkaeTests extends Ohkae
             'xmp',
         ];
 
-        foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $child) {
-            foreach ($obsoleteElements as $obsolete) {
-                if ($child->nodeName == $obsolete) {
-                    $this->addReportItem($child, $priority, $test);
+        parent::$dom->filter('body')->children()->each(function($node, $i) use ($priority, $test, $obsolete) {
+            foreach ($obsolete as $o) {
+                if ($node->nodeName() == $o) {
+                    parent::addReportItem($node, $priority, $test);
                 }
             }
-        }
+        });
+    }
+
+    /**
+     * Tables need headings (<th> tags)
+     * @param string $test - The name of this test
+     */
+    public static function tableHasHeader($test)
+    {
+        $priority = parent::OHKAE_ERROR;
+
+        $table = parent::$dom->filter('table');
+
+        $table->each(function($node, $i) use ($priority, $test) {
+            if ($node->children()->filter('tr')->first()->children()->first()->nodeName() !== 'th') {
+                parent::addReportItem($node, $priority, $test);
+            }
+        });
+    }
+
+    /**
+     * Table headers (<th>) need to have a scope
+     * @param string $test - The name of this test
+     */
+    public static function tableHeaderHasScope($test)
+    {
+        $priority = parent::OHKAE_ERROR;
+
+        $table = parent::$dom->filter('table');
+
+        $table->each(function($node, $i) use ($priority, $test) {
+            $node->children()->filter('th')->each(function($node, $i) use ($priority, $test) {
+                if (!($node->attr() == 'col' || $node->attr() == 'row')) {
+                    parent::addReportItem($node, $priority, $test);
+                }
+            });
+        });
     }
 
     /**
      * Text needs to have proper contrast against its background
-     * @param  object $dom  - The DOMCrawler object being scanned
-     * @param  string $test - The name of this test
+     * @param string $test - The name of this test
      */
-    public function textHasContrast($dom, $test)
+    public static function textHasContrast($test)
     {
-        return;
+        // coming soon to a theater near you
     }
 }

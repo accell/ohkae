@@ -1,6 +1,7 @@
 {
     "name": "accell/ohkae",
     "description": "An accessibility validater for HTML",
+    "version": "1.0.0-alpha1",
     "license": "MIT",
     "authors": [
         {
