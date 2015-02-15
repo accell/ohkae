@@ -10,6 +10,13 @@ class Ohkae
     const OHKAE_ERROR      = 'error',
           OHKAE_SUGGESTION = 'suggestion';
 
+    /**
+     * @var object $dom       - A DOMCrawler object created from the HTML
+     * @var array $report     - The completed results of the Ohkae scan
+     * @var array $tests      - A list of accessibility guideline tests to be run
+     * @var string $guideline - Which standard to follow
+     * @var object $verbage   - Names and descriptions for each accessibility test
+     */
     public static $dom,
                   $report,
                   $tests,
@@ -30,8 +37,8 @@ class Ohkae
     }
 
     /**
-     * [beginReport description]
-     * @return [type]
+     * Determines which tests to load and runs them against the DOMCrawler object
+     * @return array - The complete results of the Ohkae scan
      */
     public function runReport()
     {
@@ -68,13 +75,9 @@ class Ohkae
             'prority'     => $priority,
         ];
 
-        // Sometimes we don't need to pass in an element
         if (is_object($element)) {
             $testItem['lineNo'] = $element->getNode(0)->getLineNo();
-        }
-
-        if (isset($element)) {
-            $testItem['html'] = $element->getNode(0)->ownerDocument->saveHTML($element->getNode(0));
+            $testItem['html']   = $element->getNode(0)->ownerDocument->saveHTML($element->getNode(0));
         }
 
         // Special case for the obsolete element test

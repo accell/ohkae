@@ -16,14 +16,15 @@ class OhkaeTests extends Ohkae
         $priority   = parent::OHKAE_SUGGESTION;
         $noHeadings = true;
 
-        parent::$dom->filter('body')->children()->each(function ($node, $i) use ($priority, $test, $noHeadings) {
-            if ($node->nodeName() == 'h1'
-                || $node->nodeName() == 'h2'
-                || $node->nodeName() == 'h3'
-                || $node->nodeName() == 'h4'
-                || $node->nodeName() == 'h5'
-                || $node->nodeName() == 'h6') {
+        parent::$dom->filter('body')->children()->each(function ($node, $i) use ($priority, $test, &$noHeadings) {
+            if ($node->nodeName() === 'h1'
+                || $node->nodeName() === 'h2'
+                || $node->nodeName() === 'h3'
+                || $node->nodeName() === 'h4'
+                || $node->nodeName() === 'h5'
+                || $node->nodeName() === 'h6') {
                 $noHeadings = false;
+                return;
             }
         });
 
@@ -69,7 +70,6 @@ class OhkaeTests extends Ohkae
     public static function obsoleteElement($test)
     {
         $priority = parent::OHKAE_ERROR;
-
         $obsolete = [
             'acronym',
             'applet',
@@ -107,9 +107,7 @@ class OhkaeTests extends Ohkae
     {
         $priority = parent::OHKAE_ERROR;
 
-        $table = parent::$dom->filter('table');
-
-        $table->each(function($node, $i) use ($priority, $test) {
+        parent::$dom->filter('table')->each(function($node, $i) use ($priority, $test) {
             if ($node->children()->filter('tr')->first()->children()->first()->nodeName() !== 'th') {
                 parent::addReportItem($node, $priority, $test);
             }
@@ -124,9 +122,7 @@ class OhkaeTests extends Ohkae
     {
         $priority = parent::OHKAE_ERROR;
 
-        $table = parent::$dom->filter('table');
-
-        $table->each(function($node, $i) use ($priority, $test) {
+        parent::$dom->filter('table')->each(function($node, $i) use ($priority, $test) {
             $node->children()->filter('th')->each(function($node, $i) use ($priority, $test) {
                 if (!($node->attr() == 'col' || $node->attr() == 'row')) {
                     parent::addReportItem($node, $priority, $test);
