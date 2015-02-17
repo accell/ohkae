@@ -14,4 +14,4 @@ $ignore = [
 $ohkae = new Ohkae($html, 'wcag', null, null);
 $report = $ohkae->runReport();
 
-die(dump($report));
+die(dump(json_decode($report)));

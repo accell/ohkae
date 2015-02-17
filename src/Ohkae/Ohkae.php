@@ -12,8 +12,8 @@ class Ohkae
 
     /**
      * @var object $dom       - A DOMCrawler object created from the HTML
-     * @var array $report     - The completed results of the Ohkae scan
-     * @var array $tests      - A list of accessibility guideline tests to be run
+     * @var array  $report    - The completed results of the Ohkae scan
+     * @var array  $tests     - A list of accessibility guideline tests to be run
      * @var string $guideline - Which standard to follow
      * @var object $verbage   - Names and descriptions for each accessibility test
      */
@@ -28,7 +28,7 @@ class Ohkae
      * The class constructor
      * @param string $html      - The HTML retrieved from a file
      * @param string $guideline - The guideline standard to be followed
-     * @param array $ignored    - Array of tests to be ignored
+     * @param array  $ignored   - Array of tests to be ignored
      * @param string $verbage   - File path to your customized verbage file
      */
     public function __construct($html, $guideline, $ignored = null, $verbage = null)
@@ -41,15 +41,15 @@ class Ohkae
         }
 
         if ($verbage) {
-            self::$verbage   = json_decode(utf8_encode(file_get_contents($verbage)));
+            self::$verbage = json_decode(utf8_encode(file_get_contents($verbage)));
         } else {
-            self::$verbage   = json_decode(utf8_encode(file_get_contents(__DIR__ . '/verbage.json')));
+            self::$verbage = json_decode(utf8_encode(file_get_contents(__DIR__ . '/verbage.json')));
         }
     }
 
     /**
      * Determines which tests to load and runs them against the DOMCrawler object
-     * @return array - The complete results of the Ohkae scan
+     * @return string - A JSON encoded report from the completed Ohkae scan
      */
     public function runReport()
     {
@@ -62,18 +62,16 @@ class Ohkae
                 break;
         }
 
-        if (self::$dom) {
-            // filter out ignored tests
-            if (self::$ignored) {
-                self::$tests = array_diff(self::$tests, self::$ignored);
-            }
-
-            foreach (self::$tests as $test) {
-                OhKaeTests::$test($test);
-            }
+        // filter out ignored tests
+        if (self::$ignored) {
+            self::$tests = array_diff(self::$tests, self::$ignored);
         }
 
-        return self::$report;
+        foreach (self::$tests as $test) {
+            OhKaeTests::$test($test);
+        }
+
+        return json_encode(self::$report);
     }
 
     /**
