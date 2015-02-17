@@ -6,7 +6,12 @@ use Ohkae\Ohkae;
 
 $html = file_get_contents('test.html');
 
-$ohkae = new Ohkae($html, 'wcag');
+$ignore = [
+	'imgHasAlt',
+	'obsoleteElement',
+];
+
+$ohkae = new Ohkae($html, 'wcag', null, null);
 $report = $ohkae->runReport();
 
 die(dump($report));

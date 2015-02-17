@@ -18,22 +18,33 @@ class Ohkae
      * @var object $verbage   - Names and descriptions for each accessibility test
      */
     public static $dom,
+                  $guideline,
+                  $ignored,
                   $report,
                   $tests,
-                  $guideline,
                   $verbage;
 
     /**
      * The class constructor
-     * @param string $html        - The HTML retrieved from a file
-     * @param string $guideline   - The guideline standard to be followed
-     * @param array $ignoredTests - Any tests to be ignored
+     * @param string $html      - The HTML retrieved from a file
+     * @param string $guideline - The guideline standard to be followed
+     * @param array $ignored    - Array of tests to be ignored
+     * @param string $verbage   - File path to your customized verbage file
      */
-    public function __construct($html, $guideline)
+    public function __construct($html, $guideline, $ignored = null, $verbage = null)
     {
         self::$dom       = new Crawler($html);
         self::$guideline = $guideline;
-        self::$verbage   = json_decode(utf8_encode(file_get_contents(__DIR__ . '/verbage.json')));
+
+        if ($ignored) {
+            self::$ignored = $ignored;
+        }
+
+        if ($verbage) {
+            self::$verbage   = json_decode(utf8_encode(file_get_contents($verbage)));
+        } else {
+            self::$verbage   = json_decode(utf8_encode(file_get_contents(__DIR__ . '/verbage.json')));
+        }
     }
 
     /**
@@ -52,6 +63,11 @@ class Ohkae
         }
 
         if (self::$dom) {
+            // filter out ignored tests
+            if (self::$ignored) {
+                self::$tests = array_diff(self::$tests, self::$ignored);
+            }
+
             foreach (self::$tests as $test) {
                 OhKaeTests::$test($test);
             }

@@ -7,6 +7,7 @@ class Wcag
     public static $definedTests = [
         'contentHasHeadings',
         'imgHasAlt',
+        'imgAltNotFileName',
         'imgAltTooLong',
         'obsoleteElement',
         'tableHasHeader',

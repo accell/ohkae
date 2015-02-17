@@ -1,19 +1,31 @@
 {
     "contentHasHeadings": {
         "title": "Content should use headings for structure",
-        "desc": "No heading elements were found in this document"
+        "desc": "If appropriate, add headings to the page to organize the content"
     },
     "imgHasAlt": {
         "title": "Images need alternative text",
         "desc": "Alternative text should be provided for images"
     },
+    "imgAltNotFileName": {
+        "title": "Alternative text for images should not be the image filename",
+        "desc": "Provide a brief (under 100 characters) description of the image"
+    },
     "imgAltTooLong": {
         "title": "Images alternative text is too long",
         "desc": "Alternative text for images should be less than 100 characters"
     },
+    "objectHasTextEquivalent": {
+        "title": "Objects should have text equivalents",
+        "desc": "Objects should text equivalents of their content"
+    },
     "obsoleteElement": {
         "title": "This element is obsolete:",
         "desc": "This element is no longer valid HTML and should be removed"
+    },
+    "pElementAsHeader": {
+        "title": "Don't use p tags with bold text as headings for content",
+        "desc": "Instead, use heading tags to organize dections of a document"
     },
     "tableHasHeader": {
         "title": "Tables need headers",
@@ -26,5 +38,9 @@
     "textHasContrast": {
         "title": "Text needs appropriate contrast",
         "desc": "Text should have appropriate contrast with its background"
+    },
+    "videoNeedsCaptions": {
+        "title": "Linked or embedded videos should have captions",
+        "desc": "Any content that is embedded in your page, such as a video, audio recording, or presentation, should have a text equivalent"
     }
 }

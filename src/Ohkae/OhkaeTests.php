@@ -49,6 +49,23 @@ class OhkaeTests extends Ohkae
     }
 
     /**
+     * Don't use the image filename as its alt text
+     * @param string $test - The name of this test
+     */
+    public static function imgAltNotFileName($test)
+    {
+        $priority = parent::OHKAE_ERROR;
+
+        parent::$dom->filter('img')->each(function ($node, $i) use ($priority, $test) {
+            $fileName = $node->attr('src');
+
+            if ($node->attr('alt') === $fileName) {
+                parent::addReportItem($node, $priority, $test);
+            }
+        });
+    }
+
+    /**
      * Image alt text should be less than 100 characters
      * @param string $test - The name of this test
      */
@@ -100,6 +117,24 @@ class OhkaeTests extends Ohkae
     }
 
     /**
+     * Objects should come with text equivalents
+     * @param string $test - The name of this test
+     */
+    public static function objectHasTextEquivalent($test)
+    {
+        // coming soon
+    }
+
+    /**
+     * Don't use p tags with bold text as headings for content
+     * @param string $test - The name of this test
+     */
+    public static function pElementAsHeader($test)
+    {
+        // coming soon
+    }
+
+    /**
      * Tables need headings (<th> tags)
      * @param string $test - The name of this test
      */
@@ -124,7 +159,7 @@ class OhkaeTests extends Ohkae
 
         parent::$dom->filter('table')->each(function($node, $i) use ($priority, $test) {
             $node->children()->filter('th')->each(function($node, $i) use ($priority, $test) {
-                if (!($node->attr() == 'col' || $node->attr() == 'row')) {
+                if (!($node->attr('scope') == 'col' || $node->attr('scope') == 'row')) {
                     parent::addReportItem($node, $priority, $test);
                 }
             });
@@ -137,6 +172,11 @@ class OhkaeTests extends Ohkae
      */
     public static function textHasContrast($test)
     {
-        // coming soon to a theater near you
+        // coming soon
+    }
+
+    public static function videoNeedsCaptions()
+    {
+        // coming soon
     }
 }
