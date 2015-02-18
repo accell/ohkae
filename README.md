@@ -7,8 +7,6 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/accell/ohkae.svg?style=flat-square)](https://scrutinizer-ci.com/g/accell/ohkae)
 [![Total Downloads](https://img.shields.io/packagist/dt/accell/ohkae.svg?style=flat-square)](https://packagist.org/packages/accell/ohkae)
 
-**Note:** Replace ```Eric Colón``` ```Accell``` ```http://accell.io``` ```me@ericcolon.com``` ```Ohkae``` ```Check HTML for common accessibility issues``` with theirs correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line.
-
 Check HTML for common accessibility issues; do what you want with the data that's returned
 
 ## Install
