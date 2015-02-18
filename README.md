@@ -4,7 +4,6 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/accell/ohkae/master.svg?style=flat-square)](https://travis-ci.org/accell/ohkae)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/accell/ohkae.svg?style=flat-square)](https://scrutinizer-ci.com/g/accell/ohkae/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/accell/ohkae.svg?style=flat-square)](https://scrutinizer-ci.com/g/accell/ohkae)
 [![Total Downloads](https://img.shields.io/packagist/dt/accell/ohkae.svg?style=flat-square)](https://packagist.org/packages/accell/ohkae)
 
 Check HTML for common accessibility issues; do what you want with the data that's returned
