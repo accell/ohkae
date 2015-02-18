@@ -40,7 +40,7 @@ If you discover any security related issues, please email me@ericcolon.com inste
 
 ## Credits
 
-- [Eric Colón](https://github.com/Accell)
+- [Eric Colón](https://github.com/accell)
 - [All Contributors](../../contributors)
 
 ## License
