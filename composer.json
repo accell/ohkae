@@ -1,27 +1,44 @@
 {
     "name": "accell/ohkae",
-    "description": "An accessibility validater for HTML",
-    "version": "1.0.0-alpha1",
+    "description": "Check HTML for common accessibility issues",
+    "keywords": [
+        "html",
+        "accessibility",
+        "Ohkae"
+    ],
+    "homepage": "https://github.com/accell/ohkae",
     "license": "MIT",
     "authors": [
         {
-            "name": "Eric Colon",
-            "email": "me@ericcolon.com"
+            "name": "Eric Colón",
+            "email": "me@ericcolon.com",
+            "homepage": "http://accell.io",
+            "role": "Developer"
         }
     ],
-    "minimum-stability": "alpha",
     "require": {
-        "php": ">=5.5.9",
+        "php" : ">=5.5.9",
         "symfony/dom-crawler": "3.0.*@dev",
         "symfony/css-selector": "3.0.*@dev"
     },
     "require-dev": {
+        "phpunit/phpunit" : "4.*",
+        "scrutinizer/ocular": "~1.1",
         "symfony/var-dumper": "3.0.*@dev"
     },
     "autoload": {
-        "psr-0": {
-            "Ohkae": "src/"
+        "psr-4": {
+            "Ohkae\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ohkae\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
         }
     }
 }
-

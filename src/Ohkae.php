@@ -25,13 +25,13 @@ class Ohkae
                   $verbage;
 
     /**
-     * The class constructor
+     * Class constructor that does constructy things
      * @param string $html      - The HTML retrieved from a file
-     * @param string $guideline - The guideline standard to be followed
+     * @param string $guideline - The guideline standard to be followed, WCAG 2.0 by default
      * @param array  $ignored   - Array of tests to be ignored
      * @param string $verbage   - File path to your customized verbage file
      */
-    public function __construct($html, $guideline, $ignored = null, $verbage = null)
+    public function __construct($html, $guideline = 'wcag', $ignored = null, $verbage = null)
     {
         self::$dom       = new Crawler($html);
         self::$guideline = $guideline;
